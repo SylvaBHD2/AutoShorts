@@ -1,0 +1,55 @@
+Auto Content creation ideas and todo
+
+mots clés : Funny Memes Compilation 2024, Try not to Laugh, Viral, Epic 
+
+Process : 
+get video -> cut it in 30 sec tiles (un peu d'aleatoire entre 25 et 35 ?  ) -> get n final videos -> post them
+	monetization with clickbank.com
+	
+Shorts format :
+- Youtube Shorts
+- Instagram
+- Tiktok
+
+idées :
+- Automation : Subscriptions software GPT-4 Youtube premium(dl la video via API ?), vidIQ, invideoAI
+- ajouter recherche des videos, download auto de la video + recherche des temps forts, montage et post de la video en automatique
+- traduciton auto des videos en fonction des langages (utile pour les voiceover)
+
+
+
+Langues/pays : 
+- US
+- Italie
+- Allemagne
+- France/canada
+
+Thématiques :
+- Argent/luxe/lifestyle
+- Memes/divertissement
+- Reflexions/ TimeCapsule
+- Motivationnal (motivational quotes from pinterest)
+- Sports 
+- IA related/generated
+- Cars
+- Games
+- TikTok (Dances+meufs)
+- Tech Buys and facts
+- Satisfying
+- Commentary / Reaction
+- Stars/actu de merde
+- Trading/wealth generation/Business
+- podcasts
+- Armes(US)
+- Animes 
+- - Drone FPV
+- spiritual/astrology/meditation
+- la graille
+- voyage/nature
+
+Tests & implementation : 
+- Gandjiter : shorts Divertissement/memes auto+mobile Gameplay. Shorts -> Tiktok -> Reels
+	- Améliorer : meilleures fonts background or color aleatoires, prendre seulement l'anglais comme langue de sous-titres/automatiser plusieurs langues et envoyer dans des dossiers séparés
+- 
+
+Remarque : monter automatiquement deux vid&éos de 30 sec est bcp plus rapide qu'une seule d'une minute. Est-ce qu'on gagnerai pas du temps a faire un merge de 2x30 sec ?
