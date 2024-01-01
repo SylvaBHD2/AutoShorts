@@ -100,20 +100,17 @@ def mount_from_video(video_entry, iteration):
         #         videofile = videofile.subclip(start, start + 25)
         #         video_duration = math.floor(videofile.duration)
         video_duration = video_entry.duration
-        print("video duration will be INSIDE FROMVIDEO :",video_duration)
         # This function generate subtitles from a video, add music and another video on top of the screen
         music = AudioFileClip("FV/src_fv/music.mp3").subclip(0, video_duration)
         # print("video duration will be  :",video_duration)
         #choose a random fun video from the fun 
         rndchc = random.choice(os.listdir("FV/src_fv/fun_vid_container"))
-        print("fun video chosen is :",rndchc)
         funvideo = VideoFileClip("FV/src_fv/fun_vid_container/" + rndchc)
         # getting a random position in the fun video
         funvideoduration = math.floor(funvideo.duration)
         #choose a random position in the fun video
         start = random.randint(0, funvideoduration - video_duration)
         funvideo = funvideo.subclip(start, start + video_duration)
-        print("funvideo duration will be  :",funvideo.duration)
         funvideo.audio = music
         funvideo.audio = funvideo.audio.volumex(0.1)
 
@@ -154,24 +151,32 @@ def mount_from_video(video_entry, iteration):
 def cut_n_videos(entry_path, output_path="FV/output_fv/LastVideo",offset=0) :
         """takes the video in entry_path and cut it in n videos of 59 seconds each"""
         video = VideoFileClip(entry_path)
+        #getting rid of the credits
+        video = video.subclip(0, video.duration - 10)
         video_duration = math.floor(video.duration)
+        if (offset*59>video_duration):
+                print("Error : either offset is too high, or video is too short")
+                return
+        video = video.subclip(0+offset*59, video.duration - 10)
+        video_duration = math.ceil(video.duration)
         #if the video is less or equal to 59 sec, we don't need to crop it
         if video_duration <= 59:
                 mount_from_video(video, offset)
-        #getting rid of the intro/credits
-        video = video.subclip(5,video_duration-10)
-        n = math.ceil(video_duration/59)
-        video_duration = math.floor(video.duration)
-        #mount each part of 60 s videos, the iteration var allow to restart the process from the middle of the video if the prgram crashed
-        for i in range(n):
-                #anew indice is needed to mount the video from the middle
-                new_indice = i+offset
-                #if it's the end of the video, we mount the last part
-                if video_duration <= (new_indice+1)*59:
-                        mount_from_video(video.subclip(new_indice*59, (new_indice+1)*59), offset)
-                else :
-                        subclip = video.subclip(new_indice*59, (new_indice+1)*59)
-                        mount_from_video(subclip, new_indice)
+        else:
+                # distribute the video in n videos of 59 sec
+                n = math.ceil(video_duration/59)
+                print("video duration is {}, so we will cut it in {} videos".format(video_duration,n))
+                # mount each video
+                for i in range(n):
+                        print("DEBUG | Condi is {} because {}<{}".format(video_duration<=(1+i)*59,video_duration,(1+i)*59))
+                        if video_duration<=(1+i)*59:
+                                print("mounting video number {}. Acessing the video from {} to {} with total duration of {}".format(i+offset,(i)*59,video_duration,video_duration-(i)*59))
+                                
+                                mount_from_video(video.subclip(i*59,video_duration), i+offset)
+                                break
+                        print("mounting video number {}. Acessing the video from {} to {} with total duration of {}".format(i+offset,(i)*59,(i+1)*59,video_duration))
+                        mount_from_video(video.subclip(i*59,(i+1)*59), i+offset)
 
-cut_n_videos("FV/src_fv/lastvideo.mp4",offset=5)
+
+cut_n_videos("FV/src_fv/lastvideo.mp4",offset=6)
 # From_Text()
