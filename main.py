@@ -1,8 +1,7 @@
 # this script in python automates short video creation, with wisper ai and text to speech, speech to text API
 
-# import libraries
+# import libraries for tiktok API
 import requests, base64, random, argparse, os, playsound, time, re, textwrap
-
 #personnal libraries
 import tiktokAPI.main as TTA
 from moviepy.editor import *
@@ -14,47 +13,16 @@ from moviepy.editor import VideoFileClip, clips_array
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.fx.all import resize
 from moviepy.video.io.VideoFileClip import VideoFileClip
-import ffmpeg
-
-import logging
 from moviepy.editor import TextClip
-
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
-
-# Set the logging level to suppress messages
-logging.getLogger("moviepy").setLevel(logging.ERROR)
-
-
-def crop_video(input_file, output_file, target_aspect_ratio=9/16):
-    # Get video information
-    video = VideoFileClip(input_file)
-    width, height = video.size
-
-    # Calculate target width and height to maintain the aspect ratio
-    target_width = int(height * target_aspect_ratio)
-    target_height = height
-
-    # Calculate the cropping area
-    crop_x1 = (width - target_width) / 2
-    crop_x2 = width - crop_x1
-    crop_y1 = 0
-    crop_y2 = height
-
-    # Crop the video using ffmpeg
-    ffmpeg.input(input_file).output(
-        output_file,
-        vf=f'crop={target_width}:{target_height}:{crop_x1}:{crop_y1}',
-    ).run(overwrite_output=True)
-    print("cropped video saved in :",output_file)
-
 
 def From_Text():
         # API Token
         APItoken = "9ff9907f893258c532a0550ea1ad87f7"
 
         # text = input ("Enter the text you want to add to the video: ")
-        text = "Hello THOMAS, are you gran champion this week ? "
+        text = "Did you know ? There is no such thing as a fish. Fish is a term used to describe a wide variety of aquatic animals. There are over 30,000 species of fish, including sharks, rays, and lampreys."
 
         if text[-1] == ".":
                 text = text[:-1]
@@ -121,6 +89,7 @@ def From_Text():
 
 def mount_from_video(video_entry, iteration):
         """Takes a video of 25 sec max and add subtitles and music to it, and a fun video on top of the screen"""
+        print("TITLE WILL BE :"+"FV/output_FV/LastVideo/final"+str(iteration)+".mp4")
         #get a video from src_fv
         # videofile = VideoFileClip(video_entry)
         # #get the duration of the video
@@ -182,25 +151,27 @@ def mount_from_video(video_entry, iteration):
         cropped_video = final_clip.crop(x1=crop_x1, y1=crop_y1, x2=crop_x2, y2=crop_y2)
         cropped_video.write_videofile("FV/output_FV/LastVideo/final"+str(iteration)+".mp4", threads = 16,codec="libx264", fps=24)
 
-def cut_n_videos(entry_path, output_path="FV/output_fv/LastVideo",indice=0) :
+def cut_n_videos(entry_path, output_path="FV/output_fv/LastVideo",offset=0) :
         """takes the video in entry_path and cut it in n videos of 59 seconds each"""
         video = VideoFileClip(entry_path)
         video_duration = math.floor(video.duration)
-        #if the video is less or equal to 25 sec, we don't need to crop it
+        #if the video is less or equal to 59 sec, we don't need to crop it
         if video_duration <= 59:
-                mount_from_video(video, indice)
+                mount_from_video(video, offset)
+        #getting rid of the intro/credits
+        video = video.subclip(5,video_duration-10)
         n = math.ceil(video_duration/59)
+        video_duration = math.floor(video.duration)
+        #mount each part of 60 s videos, the iteration var allow to restart the process from the middle of the video if the prgram crashed
         for i in range(n):
-                # i = i+indice
-                new_indice = i+indice
-                #mount subclips of 30 sec
-                # print("mounting subclip " + str(i)+": from the second " + str(i*59) + " to the second " + str((i+1)*59) + "...")
-                subclip = video.subclip(5,video_duration-10)
-                subclip = subclip.subclip(i*59, (i+1)*59)
-                #write the subclips
-                mount_from_video(subclip, new_indice)
-                # print("done mounting subclip " + str(i)+": from the second " + str(i*59) + " to the second " + str((i+1)*59) + "...")
+                #anew indice is needed to mount the video from the middle
+                new_indice = i+offset
+                #if it's the end of the video, we mount the last part
+                if video_duration <= (new_indice+1)*59:
+                        mount_from_video(video.subclip(new_indice*59, (new_indice+1)*59), offset)
+                else :
+                        subclip = video.subclip(new_indice*59, (new_indice+1)*59)
+                        mount_from_video(subclip, new_indice)
 
-cut_n_videos("FV/src_fv/lastvideo.mp4",0)
+cut_n_videos("FV/src_fv/lastvideo.mp4",offset=5)
 # From_Text()
- 
