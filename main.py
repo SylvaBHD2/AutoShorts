@@ -191,14 +191,15 @@ def cut_n_videos(entry_path, output_path="FV/output_fv/LastVideo",indice=0) :
                 mount_from_video(video, indice)
         n = math.ceil(video_duration/59)
         for i in range(n):
-                i = i+indice
+                # i = i+indice
+                new_indice = i+indice
                 #mount subclips of 30 sec
-                print("mounting subclip " + str(i)+": from the second " + str(i*59) + " to the second " + str((i+1)*59) + "...")
+                # print("mounting subclip " + str(i)+": from the second " + str(i*59) + " to the second " + str((i+1)*59) + "...")
                 subclip = video.subclip(5,video_duration-10)
                 subclip = subclip.subclip(i*59, (i+1)*59)
                 #write the subclips
-                mount_from_video(subclip, i)
-                print("done mounting subclip " + str(i)+": from the second " + str(i*59) + " to the second " + str((i+1)*59) + "...")
+                mount_from_video(subclip, new_indice)
+                # print("done mounting subclip " + str(i)+": from the second " + str(i*59) + " to the second " + str((i+1)*59) + "...")
 
 cut_n_videos("FV/src_fv/lastvideo.mp4",0)
 # From_Text()
