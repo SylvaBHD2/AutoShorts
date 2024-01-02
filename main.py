@@ -89,7 +89,7 @@ def From_Text():
 
 def mount_from_video(video_entry, iteration):
         """Takes a video of 25 sec max and add subtitles and music to it, and a fun video on top of the screen"""
-        print("TITLE WILL BE :"+"FV/output_FV/LastVideo/final"+str(iteration)+".mp4")
+        print("TITLE WILL BE :"+"FV/output_FV/LastVideo/Epic & Viral Memes Compilation 2024 V"+str(iteration)+".mp4")
         #get a video from src_fv
         # videofile = VideoFileClip(video_entry)
         # #get the duration of the video
@@ -146,7 +146,15 @@ def mount_from_video(video_entry, iteration):
         crop_y1 = 0
         crop_y2 = height
         cropped_video = final_clip.crop(x1=crop_x1, y1=crop_y1, x2=crop_x2, y2=crop_y2)
-        cropped_video.write_videofile("FV/output_FV/LastVideo/final"+str(iteration)+".mp4", threads = 16,codec="libx264", fps=24)
+        #get the number in tests/mytext.txt
+        with open("tests/mytext.txt", "r") as file:
+                endname = file.read()
+
+        # Write the number +1 in tests/mytext.txt
+        with open("tests/mytext.txt", "w") as file:
+                file.write(str(int(endname)+1))
+        print ("DEBUG | endname is :",endname)
+        cropped_video.write_videofile("FV/output_FV/LastVideo/Epic & Viral Memes Compilation 2024 V"+str(endname)+".mp4", threads = 16,codec="libx264", fps=24)
 
 def cut_n_videos(entry_path, output_path="FV/output_fv/LastVideo",offset=0) :
         """takes the video in entry_path and cut it in n videos of 59 seconds each"""
@@ -178,5 +186,5 @@ def cut_n_videos(entry_path, output_path="FV/output_fv/LastVideo",offset=0) :
                         mount_from_video(video.subclip(i*59,(i+1)*59), i+offset)
 
 
-cut_n_videos("FV/src_fv/lastvideo.mp4",offset=6)
+cut_n_videos("FV/src_fv/lastvideo.mp4")
 # From_Text()
